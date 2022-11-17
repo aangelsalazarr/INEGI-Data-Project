@@ -75,7 +75,7 @@ df.to_csv('./data_files/mx_mining_data.csv', index=False)
 # now let's iterate visualizing
 for key, value in mining.items():
     fig = plt.subplot()
-    x =sns.lineplot(data=df[df['seriesId'] == key],
+    x = sns.lineplot(data=df[df['seriesId'] == key],
                     x='TIME_PERIOD',
                     y='OBS_VALUE').set(title=value)
     return x
