@@ -61,7 +61,7 @@ df.drop(['OBS_EXCEPTION', 'OBS_STATUS', 'OBS_SOURCE', 'OBS_NOTE'],
         inplace=True, axis=1)
 
 # lets output our df as a csv file
-df.to_csv('./data_files/mx_ethnicity_data.csv', index=False)
+df.to_csv('./data_files/mx_mortality_data.csv', index=False)
 
 # now let's iterate visualizing
 for key, value in morts.items():
