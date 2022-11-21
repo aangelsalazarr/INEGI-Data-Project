@@ -30,13 +30,13 @@ pop_migration = {
 
 # 0-3 are BISE, 4-6 are BIE, both geos =0700
 gdps = {
-    '6207067864': '',
-    '6207067865': '',
-    '6207067866': '',
-    '6207067867': '',
-    '494269': '',
-    '494270': '',
-    '494271': '',
+    '6207067864': 'Timely estimate of the quarterly GDP. Annex 1. Gross Domestic Product. Originals. Annual Percentage Variation',
+    '6207067865': 'Timely estimate of the quarterly GDP. Annex 1. Gross Domestic Product. Primary Activities. Originals. Annual Percentage Variation',
+    '6207067866': 'Timely estimate of the quarterly GDP. Annex 1. Gross Domestic Product. Tertiary Activities. Originals. Annual percentage variation',
+    '6207067867': 'Timely estimate of the quarterly GDP. Annex 1. Gross Domestic Product. Secondary Activities. Annual percentage variation ',
+    '494269': 'Producto Interno Bruto, a precios de mercado',
+    '494270': Impuestos a los productos, netos'',
+    '494271': 'Valor agregado bruto a precios basicos',
 }
 
 geos = {'0700':'nacional',
