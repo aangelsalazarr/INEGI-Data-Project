@@ -28,6 +28,16 @@ pop_migration = {
                   'insecurity or violence'
 }
 
+# 0-3 are BISE, 4-6 are BIE, both geos =0700
+gdps = {
+    '6207067864': '',
+    '6207067865': '',
+    '6207067866': '',
+    '6207067867': '',
+    '494269': '',
+    '494270': '',
+    '494271': '',
+}
 
 geos = {'0700':'nacional',
         '07000001': 'not sure what this is'}
