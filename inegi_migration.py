@@ -1,9 +1,18 @@
 import os
 import matplotlib.pyplot as plt
 import seaborn as sns
+from matplotlib import rc
+
 from data_processor import grab_inegi_data, save_multi_image
 import pandas as pd
 from datetime import date
+from decimal import Decimal
+
+# some params related to the framework of output that we will need
+rc('mathtext', default='regular')
+plt.rcParams["figure.autolayout"] = True
+pd.set_option('display.max_columns', None)
+
 
 # want to load into our environment our api key
 simbolico = os.environ.get('inegiKey')
@@ -75,3 +84,4 @@ for key, value in migration.items():
 # now we will convert our figures into a pdf file
 filename = './data_visuals/mexico_migration_data_visuals_'
 save_multi_image(filename + currentDate + '.pdf')
+
