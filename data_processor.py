@@ -28,16 +28,6 @@ pop_migration = {
                   'insecurity or violence'
 }
 
-# 0-3 are BISE, 4-6 are BIE, both geos =0700
-gdps = {
-    '6207067864': 'Timely estimate of the quarterly GDP. Annex 1. Gross Domestic Product. Originals. Annual Percentage Variation',
-    '6207067865': 'Timely estimate of the quarterly GDP. Annex 1. Gross Domestic Product. Primary Activities. Originals. Annual Percentage Variation',
-    '6207067866': 'Timely estimate of the quarterly GDP. Annex 1. Gross Domestic Product. Tertiary Activities. Originals. Annual percentage variation',
-    '6207067867': 'Timely estimate of the quarterly GDP. Annex 1. Gross Domestic Product. Secondary Activities. Annual percentage variation ',
-    '494269': 'Producto Interno Bruto, a precios de mercado',
-    '494270': Impuestos a los productos, netos'',
-    '494271': 'Valor agregado bruto a precios basicos',
-}
 
 geos = {'0700':'nacional',
         '07000001': 'not sure what this is'}
@@ -64,8 +54,6 @@ def grab_inegi_data(indicator, geo, bridge):
     data = response.json()
     entries = data['Series'][0]['OBSERVATIONS']
     df = pd.DataFrame(data=entries)
-    df['TIME_PERIOD'] = pd.to_datetime(df['TIME_PERIOD'])
-    df['OBS_VALUE'] = df['OBS_VALUE'].astype(float)
 
     return df
 
