@@ -1,9 +1,15 @@
 import os
 import matplotlib.pyplot as plt
 import seaborn as sns
+from matplotlib import rc
 from data_processor import grab_inegi_data, save_multi_image
 import pandas as pd
 from datetime import date
+
+# some params related to the framework of output that we will need
+rc('mathtext', default='regular')
+plt.rcParams["figure.autolayout"] = True
+pd.set_option('display.max_columns', None)
 
 # want to load into our environment our api key
 simbolico = os.environ.get('inegiKey')
@@ -69,16 +75,15 @@ for key in gdp_keys2:
 df.drop(['OBS_EXCEPTION', 'OBS_STATUS', 'OBS_SOURCE', 'OBS_NOTE', 'COBER_GEO'],
         inplace=True, axis=1)
 
-# converting YYYY/QQ to datetime
-df['TIME_PERIOD'] = pd.to_datetime(df['TIME_PERIOD'], format='%m/%Y')
+# TIME_PERIOD -> (1) Year & (2) Quarter
+df['year'] = df['TIME_PERIOD'].str[:4]
+df['quarter'] = df['TIME_PERIOD'].str[-1:]
+df['period'] = df['year'] + '-Q' + df['quarter']
+df['period'] = pd.to_datetime(df['period']).dt.strftime('%Y-%m')
 
-'''
-# df['QUARTER'] = df['TIME_PERIOD'].str[-4:]
-# create year by year
-df['DATE'] = df['TIME_PERIOD'].astype(str).str[:-3]
-df['DATE'] = pd.to_datetime(df['DATE'], format='%Y')
+
+# converting OBS_VALUE to float
 df['OBS_VALUE'] = df['OBS_VALUE'].astype(float)
-'''
 
 # lets output our df as a csv file
 df.to_csv('./data_files/mx_gdp_data.csv', index=False)
@@ -86,12 +91,12 @@ df.to_csv('./data_files/mx_gdp_data.csv', index=False)
 # now let's iterate visualizing
 for key, value in gdps_2.items():
     plt.figure()
-    x = sns.barplot(data=df[(df['seriesId'] == key) & (df['DATE'] >
-                                                       '1/1/2020')],
-                    x='TIME_PERIOD',
+    x = sns.barplot(data=df[(df['seriesId'] == key) & (df['period'] >=
+                                                       '2015-01-01')],
+                    x='period',
                     y='OBS_VALUE').set(title=value)
     # set the ticks first
-    # plt.xticks(rotation=90)  # Rotates X-Axis Ticks by 45-degrees
+    plt.xticks(rotation=90)  # Rotates X-Axis Ticks by 45-degrees
 
 # now we will convert our figures into a pdf file
 filename = './data_visuals/mexico_gdp_data_visuals_'
