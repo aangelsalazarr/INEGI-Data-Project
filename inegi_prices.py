@@ -30,15 +30,29 @@ bridges = {'BIE':'Bank for Economic Information',
 
 # cpi data
 prices = {
-    '628194': 'hello',
-    '628201': 'my',
-    '628195': 'name',
-    '628198': 'is',
-    '628202': 'angel',
-    '628205': 'and',
-    '628215': 'i',
-    '628216': 'like',
-    '628219': 'coding',
+    '628194': 'Indice Nacional de Precios al Sonsumidor, Base Segunda '
+              'Quincena de Julio de 2018=100, Indice General',
+    '628195': 'Indice Nacional de Precios al Sonsumidor, Base Segunda '
+              'Quincena de Julio de 2018=100, Indice General, Subyacente Total',
+    '628201': 'Indice Nacional de Precios al Sonsumidor, Base Segunda '
+              'Quincena de Julio de 2018=100, Indice General, Subyacente Total',
+    '628198': 'Indice Nacional de Precios al Sonsumidor, Base Segunda '
+              'Quincena de Julio de 2018=100, Inflacion Mensual',
+    '628202': 'Indice Nacional de Precios al Sonsumidor, Base Segunda '
+              'Quincena de Julio de 2018=100, Inflacion Mensual, Subyacente '
+              'Total',
+    '628205': 'Indice Nacional de Precios al Sonsumidor, Base Segunda '
+              'Quincena de Julio de 2018=100, Inflacion Mensual, No Subyacente '
+              'Total',
+    '628215': 'Indice Nacional de Precios al Sonsumidor, Base Segunda '
+              'Quincena de Julio de 2018=100, Inflacion Acumulada Anual, '
+              'Indice General',
+    '628216': 'Indice Nacional de Precios al Sonsumidor, Base Segunda '
+              'Quincena de Julio de 2018=100, Inflacion Acumulada Anual, '
+              'Subyacente Total',
+    '628219': 'Indice Nacional de Precios al Sonsumidor, Base Segunda '
+              'Quincena de Julio de 2018=100, Inflacion Acumulada Anual, '
+              'Subyacente Total',
 }
 
 # creating a list of keys
