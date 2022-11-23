@@ -66,12 +66,13 @@ df.drop(['OBS_EXCEPTION', 'OBS_STATUS', 'OBS_SOURCE', 'OBS_NOTE', 'COBER_GEO'],
         inplace=True, axis=1)
 
 # period is monthly, so let's convert to date time
-df['TIME_PERIOD'] = pd.to_datetime(df['TIME_PERIOD'], format='%Y/%m')
-
-df = df.loc[(df != 0).any(axis=1)]
+df['TIME_PERIOD'] = pd.to_datetime(df['TIME_PERIOD'],
+                                   format='%Y/%m').dt.strftime('%Y-%m')
+df.reset_index(inplace=True)
+df = df[df['OBS_VALUE'] != '']
 
 # converting OBS_VALUE to float
-#df['OBS_VALUE'] = df['OBS_VALUE'].astype(float)
+df['OBS_VALUE'] = df['OBS_VALUE'].astype(float)
 
 print(df)
 
@@ -82,7 +83,7 @@ df.to_csv('./data_files/mx_cpi_data.csv', index=False)
 for key, value in prices.items():
     plt.figure()
     x = sns.barplot(data=df[(df['seriesId'] == key) & (df['TIME_PERIOD'] >=
-                                                       '2015-01-01')],
+                                                       '2020-01')],
                     x='TIME_PERIOD',
                     y='OBS_VALUE').set(title=value)
     # set the ticks first
