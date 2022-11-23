@@ -54,6 +54,9 @@ def grab_inegi_data(indicator, geo, bridge):
     data = response.json()
     entries = data['Series'][0]['OBSERVATIONS']
     df = pd.DataFrame(data=entries)
+    df.dropna(axis=0)
+    df.reset_index()
+
 
     return df
 
