@@ -55,8 +55,12 @@ def grab_inegi_data(indicator, geo, bridge):
     entries = data['Series'][0]['OBSERVATIONS']
     df = pd.DataFrame(data=entries)
 
-
     return df
+
+
+def combine_dfs(dfs):
+    combined_df = pd.concat(dfs, axis=0, ignore_index=True)
+    return combined_df
 
 
 def save_multi_image(filename):
