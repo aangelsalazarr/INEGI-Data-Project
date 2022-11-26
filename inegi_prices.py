@@ -2,7 +2,7 @@ import os
 import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib import rc
-from data_processor import grab_inegi_data, save_multi_image
+from data_processor import *
 import pandas as pd
 from datetime import date
 
@@ -60,19 +60,10 @@ prices_keys = list(prices.keys())
 geo_keys = list(geos.keys())
 bridge_keys = list(bridges.keys())
 
-# turning this into a function moving forward
-df = pd.DataFrame(columns=['seriesId'])
-
-# now let's iterate through each key:value pair in dict and create a df
-for key in prices_keys:
-
-    # grab data
-    a = grab_inegi_data(indicator=key, geo=geo_keys[0], bridge=bridge_keys[0])
-    df = pd.concat([df, pd.DataFrame(a)])
-
-    # add series id
-    if df['seriesId'].isnull:
-        df['seriesId'].fillna(key, inplace=True)
+# processing our data
+df = process_data_by_series(keys=prices_keys,
+                            geo=geo_keys[0],
+                            bridge=bridge_keys[0])
 
 
 # let's drop cols = OBS_EXCEPTION, OBS_SOURCE, & OBS_NOTE
@@ -90,6 +81,7 @@ df['OBS_VALUE'] = df['OBS_VALUE'].astype(float)
 
 print(df)
 
+'''
 # lets output our df as a csv file
 df.to_csv('./data_files/mx_cpi_data.csv', index=False)
 
@@ -107,3 +99,4 @@ for key, value in prices.items():
 filename = './data_visuals/mexico_cpi_data_visuals_'
 save_multi_image(filename + currentDate + '.pdf')
 
+'''
