@@ -9,36 +9,11 @@ from matplotlib.backends.backend_pdf import PdfPages
 # want to load into our environment our api key
 simbolico = os.environ.get('inegiKey')
 
-# dictionary storing possible request types
-indicators = {'510108':'producto interno bruto (total nacional)',
-              '497676':'actividad turistica, base 2013, indices de vol fisico',
-              '1002000001':'poblacion total'}
-pop_migration = {
-    '6200205255': 'Immigration Population, 5 yrs and over',
-    '6200205252': '% international migran pop. headed to other country',
-    '6200205262': 'International migration net balance of 5 yrs and over',
-    '6200205264': '% international migrant with no destination',
-    '6200240349': '% international migration to USA',
-    '6200240327': '% of international migration to rest of world',
-    '6200240404': '% international migrant pop. due to public '
-                  'insecurity/violence',
-    '6200240415': '% of international migrant pop. to unspecified countries',
-    '6207129645': '% migrant pop. of 5 yrs and over according to: education',
-    '6207129646': '% migrant pop. of 5 yrs or over according to: criminal '
-                  'insecurity or violence'
-}
-
-
-geos = {'0700':'nacional',
-        '07000001': 'not sure what this is'}
-
-bridges = {'BIE':'Bank for Economic Information',
-           'BISE':'Bank of Indicators'}
-
 
 def grab_inegi_data(indicator, geo, bridge):
     # calling api
-    base = 'https://en.www.inegi.org.mx/app/api/indicadores/desarrolladores/jsonxml/INDICATOR/'
+    base = 'https://en.www.inegi.org.mx/app/api/indicadores/desarrolladores/' \
+           'jsonxml/INDICATOR/'
     ind = indicator + '/'  # id indicator, list(mining.keys())[6]
     lang = 'en' + '/'  # or 'es' for spanish language
     geo_id = geo + '/'  # geographic area, list(geos.keys())[1]
@@ -58,8 +33,76 @@ def grab_inegi_data(indicator, geo, bridge):
     return df
 
 
+def process_data_by_series(keys, geo, bridge):
+
+    # empty df with seriesId column
+    df = pd.DataFrame(columns=['seriesId'])
+
+    for key in keys:
+
+        # grabbing data
+        a = grab_inegi_data(indicator=key, geo=geo, bridge=bridge)
+        df = pd.concat([df, pd.DataFrame(a)])
+
+        # add seriesId
+        if df['seriesId'].isnull:
+            df['seriesId'].fillna(key, inplace=True)
+
+        # dropping all empty sells
+        if df['OBS_VALUE'].isnull:
+            df['OBS_VALUE'].fillna('NA', inplace=True)
+
+    return df
+
+
+def clean_data(df):
+
+    # dropping the cols listed below as they don't hold relevant data
+    df.drop(['OBS_EXCEPTION', 'OBS_STATUS', 'OBS_SOURCE', 'OBS_NOTE',
+             'COBER_GEO'], inplace=True, axis=1)
+
+    # dropping rows with cells = NA
+    df = df[df['OBS_VALUE'] != 'NA']
+
+    # resetting our index
+    df.reset_index(inplace=True)
+
+    # changing obs_value to float
+    df['OBS_VALUE'] = df['OBS_VALUE'].astype(float)
+
+    return df
+
+
+def vis_data_barplot(dict, df):
+
+    for key, value in dict.items():
+        plt.figure()
+        x = sns.barplot(data=df[df['seriesId'] == key],
+                        x='TIME_PERIOD',
+                        y='OBS_VALUE',
+                        color='maroon').set(title=value)
+
+        # rotate our xticks 90 degrees
+        plt.xticks(rotation=90)
+
+
+def vis_data_lineplot(dict, df):
+
+    for key, value in dict.items():
+
+        plt.figure()
+
+        x = sns.lineplot(data=df[df['seriesId'] == key],
+                         x='TIME_PERIOD',
+                         y='OBS_VALUE', color='maroon').set(title=value)
+
+        # rotate our xticks 90 degrees
+        plt.xticks(rotation=90)
+
+
 def combine_dfs(dfs):
     combined_df = pd.concat(dfs, axis=0, ignore_index=True)
+
     return combined_df
 
 
@@ -70,3 +113,4 @@ def save_multi_image(filename):
     for fig in figs:
         fig.savefig(pp, format='pdf')
     pp.close()
+

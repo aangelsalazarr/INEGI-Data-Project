@@ -108,90 +108,31 @@ eyos = {
 eyo_1_keys = list(eyo_1.keys())
 eyo_2_keys = list(eyo_2.keys())
 eyo_3_keys = list(eyo_3.keys())
-eyos_keys =  list(eyos.keys())
+eyos_keys = list(eyos.keys())
 geo_keys = list(geos.keys())
 bridge_keys = list(bridges.keys())
 
-# turning this into a function moving forward
-df1 = pd.DataFrame(columns=['seriesId'])
-df2 = pd.DataFrame(columns=['seriesId'])
-df3 = pd.DataFrame(columns=['seriesId'])
-
 # now let's iterate through each key:value pair in dict and create a df
-for key in eyo_1_keys:
-
-    # grab data
-    a = grab_inegi_data(indicator=key, geo=geo_keys[0], bridge=bridge_keys[1])
-    df1 = pd.concat([df1, pd.DataFrame(a)])
-
-    # add series id
-    if df1['seriesId'].isnull:
-        df1['seriesId'].fillna(key, inplace=True)
-
-    # dropping all empty cells
-    if df1['OBS_VALUE'].isnull:
-        df1['OBS_VALUE'].fillna('NA', inplace=True)
-
-for key in eyo_2_keys:
-
-    # grab data
-    b = grab_inegi_data(indicator=key, geo=geo_keys[0], bridge=bridge_keys[1])
-    df2 = pd.concat([df2, pd.DataFrame(b)])
-
-    # add series id
-    if df2['seriesId'].isnull:
-        df2['seriesId'].fillna(key, inplace=True)
-
-    # dropping all empty cells
-    if df2['OBS_VALUE'].isnull:
-        df2['OBS_VALUE'].fillna('NA', inplace=True)
-
-
-for key in eyo_3_keys:
-
-    # grab data
-    c = grab_inegi_data(indicator=key, geo=geo_keys[0], bridge=bridge_keys[1])
-    df3 = pd.concat([df3, pd.DataFrame(c)])
-
-    # add series id
-    if df3['seriesId'].isnull:
-        df3['seriesId'].fillna(key, inplace=True)
-
-    # dropping all empty cells
-    if df3['OBS_VALUE'].isnull:
-        df3['OBS_VALUE'].fillna('NA', inplace=True)
+df1 = process_data_by_series(keys=eyo_1_keys, geo=geo_keys[0],
+                             bridge=bridge_keys[1])
+df2 = process_data_by_series(keys=eyo_2_keys, geo=geo_keys[0],
+                             bridge=bridge_keys[1])
+df3 = process_data_by_series(keys=eyo_3_keys, geo=geo_keys[0],
+                             bridge=bridge_keys[1])
 
 # putting all dfs into a list
 dfs = [df1, df2, df3]
 
 # concatenating all dfs vertically
 df_main = combine_dfs(dfs)
+df_main = clean_data(df=df_main)
 
-# dropping the columns we do not need
-df_main.drop(['OBS_EXCEPTION', 'OBS_STATUS', 'OBS_SOURCE', 'OBS_NOTE',
-              'COBER_GEO'],
-             inplace=True, axis=1)
-
-# getting rid of any empty cells
-df_main = df_main[df_main['OBS_VALUE'] != 'NA']
-
-df_main.reset_index(inplace=True)
-df_main['OBS_VALUE'] = df_main['OBS_VALUE'].astype(float)
-
+print(df_main)
 
 # lets output our df as a csv file
 df_main.to_csv('./data_files/mx_employment_data.csv', index=False)
-print(df_main)
 
-
-# now let's iterate visualizing
-for key, value in eyos.items():
-    plt.figure()
-    x = sns.barplot(data=df_main[(df_main['seriesId'] == key)],
-                    x='TIME_PERIOD',
-                    y='OBS_VALUE').set(title=value)
-    # set the ticks first
-    plt.xticks(rotation=90)  # Rotates X-Axis Ticks by 45-degrees
+vis_data_barplot(dict=eyos, df=df_main)
 
 # now we will convert our figures into a pdf file
 filename = './data_visuals/mexico_employment_data_visuals_'
@@ -203,6 +144,5 @@ df['year'] = df['TIME_PERIOD'].str[:4]
 df['quarter'] = df['TIME_PERIOD'].str[-1:]
 df['period'] = df['year'] + '-Q' + df['quarter']
 df['period'] = pd.to_datetime(df['period']).dt.strftime('%Y-%m')
-
-
 '''
+
