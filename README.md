@@ -6,6 +6,7 @@ documenting, processing, and visualing INEGI data
 - [Consumer Prices](https://github.com/aangelsalazarr/INEGI-Data-Project/blob/main/inegi_prices.py)
 - [Gross Domestic Product](https://github.com/aangelsalazarr/INEGI-Data-Project/blob/main/inegi_gdp.py)
 - [Mining](https://github.com/aangelsalazarr/INEGI-Data-Project/blob/main/inegi_mining.py)
+- [Migration Trends](https://github.com/aangelsalazarr/INEGI-Data-Project/blob/main/inegi_migration.py)
 
 ## Visuals / Data
 - [Data Visuals](https://github.com/aangelsalazarr/INEGI-Data-Project/tree/main/data_visuals)
