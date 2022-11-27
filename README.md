@@ -12,5 +12,8 @@ documenting, processing, and visualing INEGI data
 - [Data Visuals](https://github.com/aangelsalazarr/INEGI-Data-Project/tree/main/data_visuals)
 - [Data Files, CSV Format](https://github.com/aangelsalazarr/INEGI-Data-Project/tree/main/data_files)
 
+## Functions
+- [INEGI Open Data Processor](https://github.com/aangelsalazarr/INEGI-Data-Project/blob/main/data_processor.py)
+
 ## Sources
 - [INEGI](http://en.www.inegi.org.mx/temas/)
