@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib import rc
 
-from data_processor import grab_inegi_data, save_multi_image
+from data_processor import *
 import pandas as pd
 from datetime import date
 from decimal import Decimal
@@ -51,34 +51,19 @@ migration_keys = list(migration.keys())
 geo_keys = list(geos.keys())
 bridge_keys = list(bridges.keys())
 
-# turning this into a function moving forward
-df = pd.DataFrame(columns=['seriesId'])
-
-# now let's iterate through each key:value pair in dict and create a df
-for key in migration_keys:
-
-    # grab data
-    a = grab_inegi_data(indicator=key, geo=geo_keys[0], bridge=bridge_keys[1])
-    df = pd.concat([df, pd.DataFrame(a)])
-
-    # add series id
-    if df['seriesId'].isnull:
-        df['seriesId'].fillna(key, inplace=True)
+# processing our data
+df = process_data_by_series(keys=migration_keys, geo=geo_keys[0],
+                            bridge=bridge_keys[1])
 
 
-# let's drop cols = OBS_EXCEPTION, OBS_SOURCE, & OBS_NOTE
-df.drop(['OBS_EXCEPTION', 'OBS_STATUS', 'OBS_SOURCE', 'OBS_NOTE'],
-        inplace=True, axis=1)
+# cleaning our df
+df = clean_data(df=df)
 
 # lets output our df as a csv file
 df.to_csv('./data_files/mx_migration_data.csv', index=False)
 
-# now let's iterate visualizing
-for key, value in migration.items():
-    plt.figure()
-    x = sns.lineplot(data=df[df['seriesId'] == key],
-                    x='TIME_PERIOD',
-                    y='OBS_VALUE').set(title=value)
+# visualizing out data
+vis_data_lineplot(dict=migration, df=df)
 
 
 # now we will convert our figures into a pdf file
