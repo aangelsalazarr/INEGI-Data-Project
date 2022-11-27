@@ -80,20 +80,6 @@ df['TIME_PERIOD'] = pd.to_datetime(df['TIME_PERIOD'],
                                    
 '''
 
-'''
-# now let's iterate visualizing
-for key, value in prices.items():
-    plt.figure()
-    x = sns.barplot(data=df[(df['seriesId'] == key) & (df['TIME_PERIOD'] >=
-                                                       '2020-01')],
-                    x='TIME_PERIOD',
-                    y='OBS_VALUE').set(title=value)
-    # set the ticks first
-    plt.xticks(rotation=90)  # Rotates X-Axis Ticks by 45-degrees
-
-
-'''
-
 # now we will convert our figures into a pdf file
 filename = './data_visuals/mexico_cpi_data_visuals_'
 save_multi_image(filename + currentDate + '.pdf')
