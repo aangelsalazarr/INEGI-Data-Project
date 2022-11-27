@@ -65,26 +65,22 @@ df = process_data_by_series(keys=prices_keys,
                             geo=geo_keys[0],
                             bridge=bridge_keys[0])
 
+# let's clean our data
+df = clean_data(df=df)
 
-# let's drop cols = OBS_EXCEPTION, OBS_SOURCE, & OBS_NOTE
-df.drop(['OBS_EXCEPTION', 'OBS_STATUS', 'OBS_SOURCE', 'OBS_NOTE', 'COBER_GEO'],
-        inplace=True, axis=1)
-
-# period is monthly, so let's convert to date time
-df['TIME_PERIOD'] = pd.to_datetime(df['TIME_PERIOD'],
-                                   format='%Y/%m').dt.strftime('%Y-%m')
-df.reset_index(inplace=True)
-df = df[df['OBS_VALUE'] != '']
-
-# converting OBS_VALUE to float
-df['OBS_VALUE'] = df['OBS_VALUE'].astype(float)
-
-print(df)
-
-'''
 # lets output our df as a csv file
 df.to_csv('./data_files/mx_cpi_data.csv', index=False)
 
+vis_data_lineplot(dict=prices, df=df, start='2020-01')
+
+'''
+# period is monthly, so let's convert to date time
+df['TIME_PERIOD'] = pd.to_datetime(df['TIME_PERIOD'],
+                                   format='%Y/%m').dt.strftime('%Y-%m')
+                                   
+'''
+
+'''
 # now let's iterate visualizing
 for key, value in prices.items():
     plt.figure()
@@ -95,8 +91,9 @@ for key, value in prices.items():
     # set the ticks first
     plt.xticks(rotation=90)  # Rotates X-Axis Ticks by 45-degrees
 
+
+'''
+
 # now we will convert our figures into a pdf file
 filename = './data_visuals/mexico_cpi_data_visuals_'
 save_multi_image(filename + currentDate + '.pdf')
-
-'''

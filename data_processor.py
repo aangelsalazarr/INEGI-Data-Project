@@ -34,7 +34,6 @@ def grab_inegi_data(indicator, geo, bridge):
 
 
 def process_data_by_series(keys, geo, bridge):
-
     # empty df with seriesId column
     df = pd.DataFrame(columns=['seriesId'])
 
@@ -56,13 +55,13 @@ def process_data_by_series(keys, geo, bridge):
 
 
 def clean_data(df):
-
     # dropping the cols listed below as they don't hold relevant data
     df.drop(['OBS_EXCEPTION', 'OBS_STATUS', 'OBS_SOURCE', 'OBS_NOTE',
              'COBER_GEO'], inplace=True, axis=1)
 
     # dropping rows with cells = NA
     df = df[df['OBS_VALUE'] != 'NA']
+    df = df[df['OBS_VALUE'] != '']
 
     # resetting our index
     df.reset_index(inplace=True)
@@ -73,11 +72,11 @@ def clean_data(df):
     return df
 
 
-def vis_data_barplot(dict, df):
-
+def vis_data_barplot(dict, df, start='1901-01'):
     for key, value in dict.items():
         plt.figure()
-        x = sns.barplot(data=df[df['seriesId'] == key],
+        x = sns.barplot(data=df[(df['seriesId'] == key) & (df['TIME_PERIOD']
+                                                           >= str(start))],
                         x='TIME_PERIOD',
                         y='OBS_VALUE',
                         color='maroon').set(title=value)
@@ -86,15 +85,15 @@ def vis_data_barplot(dict, df):
         plt.xticks(rotation=90)
 
 
-def vis_data_lineplot(dict, df):
-
+def vis_data_lineplot(dict, df, start='1901-01'):
     for key, value in dict.items():
-
         plt.figure()
 
-        x = sns.lineplot(data=df[df['seriesId'] == key],
-                         x='TIME_PERIOD',
-                         y='OBS_VALUE', color='maroon').set(title=value)
+        x = sns.barplot(data=df[(df['seriesId'] == key) & (df['TIME_PERIOD']
+                                                           >= str(start))]
+                        ,
+                        x='TIME_PERIOD',
+                        y='OBS_VALUE', color='maroon').set(title=value)
 
         # rotate our xticks 90 degrees
         plt.xticks(rotation=90)
@@ -113,4 +112,3 @@ def save_multi_image(filename):
     for fig in figs:
         fig.savefig(pp, format='pdf')
     pp.close()
-
