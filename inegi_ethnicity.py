@@ -1,7 +1,7 @@
 import os
 import matplotlib.pyplot as plt
 import seaborn as sns
-from data_processor import grab_inegi_data, save_multi_image
+from data_processor import *
 import pandas as pd
 from datetime import date
 
@@ -49,34 +49,18 @@ ethns_keys = list(ethns.keys())
 geo_keys = list(geos.keys())
 bridge_keys = list(bridges.keys())
 
-# turning this into a function moving forward
-df = pd.DataFrame(columns=['seriesId'])
+# processing our data
+df = process_data_by_series(keys=ethns_keys, geo=geo_keys[0],
+                            bridge=bridge_keys[1])
 
-# now let's iterate through each key:value pair in dict and create a df
-for key in ethns_keys:
-
-    # grab data
-    a = grab_inegi_data(indicator=key, geo=geo_keys[0], bridge=bridge_keys[1])
-    df = pd.concat([df, pd.DataFrame(a)])
-
-    # add series id
-    if df['seriesId'].isnull:
-        df['seriesId'].fillna(key, inplace=True)
-
-
-# let's drop cols = OBS_EXCEPTION, OBS_SOURCE, & OBS_NOTE
-df.drop(['OBS_EXCEPTION', 'OBS_STATUS', 'OBS_SOURCE', 'OBS_NOTE'],
-        inplace=True, axis=1)
+# cleaning our data
+df = clean_data(df=df)
 
 # lets output our df as a csv file
 df.to_csv('./data_files/mx_ethnicity_data.csv', index=False)
 
-# now let's iterate visualizing
-for key, value in ethns.items():
-    plt.figure()
-    x = sns.barplot(data=df[df['seriesId'] == key],
-                    x='TIME_PERIOD',
-                    y='OBS_VALUE').set(title=value)
+# visualizing our data
+vis_data_barplot(dict=ethns, df=df)
 
 
 # now we will convert our figures into a pdf file
